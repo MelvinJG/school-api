@@ -12,7 +12,7 @@ class userRoutes{
 
     config(): void{ 
         this.router.get('/',UserController.list);
-        this.router.get('/login',UserController.login);
+        this.router.post('/login',UserController.login);
         this.router.post('/',UserController.create);
         this.router.patch('/:id/status',UserController.updateStatus);
         this.router.patch('/:id',UserController.update);
