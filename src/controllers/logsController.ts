@@ -37,10 +37,12 @@ class logsController{
     // esto para el metodo POST
     public async createBit(req: Request, res: Response): Promise<any>{
         try{
-            const { idEvento } = req.body;
-            const BitById = await Pool.query('SELECT * FROM evento WHERE idEvento = ?', [idEvento]);
+            const idEvento = req.body.idEvento;
+            const detalle = req.body.detalle;
+            const BitById = await Pool.query(`SELECT * FROM evento WHERE idEvento = '${idEvento}'`);
+            console.log("BitById ",BitById)
             if(BitById.length > 0){
-                await Pool.query('INSERT INTO bitacora VALUES (idEvento, detalle, fechaHoraEvento) values (?,?,?) ', [req.body]);
+                await Pool.query(`INSERT INTO bitacora(idEvento,detalle,fechaHoraEvento) VALUES('${idEvento}','${detalle}',NOW())`);
                 return res.json({message: `Registro guardado.`});
             }
             return res.status(404).json({message: 'No existe el evento'});
@@ -86,7 +88,7 @@ class logsController{
     // esto para el metodo POST
     public async createEv(req: Request, res: Response): Promise<void>{
         try{        
-            await Pool.query('INSERT INTO evento VALUES (nombreEvento, estado) values (?,1) ', [req.body]);
+            await Pool.query('INSERT INTO evento SET ?', [req.body]);
             res.json({message: `Evento guardado.`});
         }
         catch(err){
